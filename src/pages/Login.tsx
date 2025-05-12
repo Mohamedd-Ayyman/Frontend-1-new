@@ -1,8 +1,7 @@
-
-import React from 'react';
-import { Link } from 'react-router-dom';
-import LoginForm from '../components/LoginForm';
-import { Stethoscope } from 'lucide-react';
+import React from "react";
+import { Link } from "react-router-dom";
+import LoginForm from "../components/LoginForm";
+import { Stethoscope } from "lucide-react";
 
 const Login = () => {
   return (

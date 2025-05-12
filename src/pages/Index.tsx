@@ -5,7 +5,6 @@ import { Calendar, UserRound, FileText, Stethoscope } from "lucide-react";
 const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-50 to-blue-100">
-      {/* Navigation */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
@@ -44,7 +43,6 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
@@ -68,14 +66,12 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features Section */}
       <section id="services" className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
             Our Services
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {/* Feature 1 */}
             <div className="text-center">
               <div className="bg-blue-100 rounded-full p-4 inline-flex mb-6">
                 <UserRound className="h-10 w-10 text-blue-600" />
@@ -87,7 +83,6 @@ const Index = () => {
               </p>
             </div>
 
-            {/* Feature 2 */}
             <div className="text-center">
               <div className="bg-blue-100 rounded-full p-4 inline-flex mb-6">
                 <Calendar className="h-10 w-10 text-blue-600" />
@@ -99,7 +94,6 @@ const Index = () => {
               </p>
             </div>
 
-            {/* Feature 3 */}
             <div className="text-center">
               <div className="bg-blue-100 rounded-full p-4 inline-flex mb-6">
                 <FileText className="h-10 w-10 text-blue-600" />
@@ -114,7 +108,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA */}
       <section className="py-16 bg-blue-600 text-white">
         <div className="max-w-4xl mx-auto text-center px-4">
           <h2 className="text-3xl font-bold mb-6">Ready to get started?</h2>
@@ -137,7 +130,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="bg-gray-100 py-12">
         <div className="max-w-6xl mx-auto px-4 text-gray-600">
           <div className="flex flex-col md:flex-row justify-between">

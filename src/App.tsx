@@ -18,6 +18,8 @@ import AdminPanel from "./pages/AdminPanel";
 import DoctorPanel from "./pages/DoctorPanel";
 import ReceptionistPanel from "./pages/ReceptionistPanel";
 import CTScan from "./pages/Modalities/CTScan";
+import MRIScan from "./pages/Modalities/MRIScan";
+import Ultrasound from "./pages/Modalities/Ultrasound";
 
 const queryClient = new QueryClient();
 
@@ -38,13 +40,12 @@ const App = () => (
           <Route path="/billing" element={<Billing />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/prescriptions" element={<Prescriptions />} />
-
           <Route path="/admin" element={<AdminPanel />} />
           <Route path="/doctor" element={<DoctorPanel />} />
           <Route path="/receptionist" element={<ReceptionistPanel />} />
-
           <Route path="/modalities/ct-scan" element={<CTScan />} />
-
+          <Route path="/modalities/mri-scan" element={<MRIScan />} />
+          <Route path="/modalities/ultrasound" element={<Ultrasound />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

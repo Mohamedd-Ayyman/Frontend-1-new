@@ -1,12 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../components/Dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Clock, UserRound, FileText } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Calendar,
+  Clock,
+  UserRound,
+  FileText,
+  Activity,
+  Microscope,
+  Eye,
+  Check,
+} from "lucide-react";
 
 const DoctorPanel = () => {
   const userRole = "staff";
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const todaysAppointments = [
+  // Sample data for today's appointments
+  const [todaysAppointments, setTodaysAppointments] = useState([
     {
       id: 1,
       patientName: "John Doe",
@@ -14,6 +29,7 @@ const DoctorPanel = () => {
       type: "Follow-up",
       status: "completed",
       notes: "Patient reports improved condition. Continue current medication.",
+      viewed: false,
     },
     {
       id: 2,
@@ -23,6 +39,7 @@ const DoctorPanel = () => {
       status: "completed",
       notes:
         "Initial assessment complete. Ordered blood work and prescribed antibiotic.",
+      viewed: false,
     },
     {
       id: 3,
@@ -31,6 +48,7 @@ const DoctorPanel = () => {
       type: "Consultation",
       status: "in-progress",
       notes: "",
+      viewed: false,
     },
     {
       id: 4,
@@ -39,6 +57,7 @@ const DoctorPanel = () => {
       type: "Follow-up",
       status: "scheduled",
       notes: "",
+      viewed: false,
     },
     {
       id: 5,
@@ -47,52 +66,137 @@ const DoctorPanel = () => {
       type: "Consultation",
       status: "scheduled",
       notes: "",
+      viewed: false,
     },
-  ];
+  ]);
 
-  const pendingTasks = [
+  // Sample data for pending tasks
+  const [pendingTasks, setPendingTasks] = useState([
     {
       id: 1,
       task: "Review lab results for patient #12458",
       priority: "high",
       due: "Today",
+      viewed: false,
+      completed: false,
     },
     {
       id: 2,
       task: "Complete medical report for Sarah Johnson",
       priority: "medium",
       due: "Today",
+      viewed: false,
+      completed: false,
     },
     {
       id: 3,
       task: "Sign prescription refills (3)",
       priority: "medium",
       due: "Tomorrow",
+      viewed: false,
+      completed: false,
     },
     {
       id: 4,
       task: "Review referral requests (2)",
       priority: "low",
       due: "May 15, 2025",
+      viewed: false,
+      completed: false,
     },
-  ];
+  ]);
+
+  // Available modalities
+  const [modalities, setModalities] = useState([
+    {
+      name: "CT Scan",
+      icon: Activity,
+      path: "/modalities/ct-scan",
+      description: "Computed Tomography scanning",
+    },
+    {
+      name: "MRI",
+      icon: Activity,
+      path: "/modalities/mri-scan",
+      description: "Magnetic Resonance Imaging",
+    },
+    {
+      name: "Ultrasound",
+      icon: Activity,
+      path: "/modalities/ultrasound",
+      description: "Ultrasound imaging",
+    },
+  ]);
+
+  // Check if user is actually a doctor
+  useEffect(() => {
+    const staffRole = localStorage.getItem("staffRole");
+    if (staffRole !== "doctor") {
+      toast({
+        title: "Access Restricted",
+        description: "You need doctor credentials to access this panel",
+        variant: "destructive",
+      });
+      // Redirect to appropriate panel or login
+      navigate("/login");
+    }
+  }, [navigate, toast]);
+
+  // Handle view appointment
+  const handleViewAppointment = (id: number) => {
+    setTodaysAppointments(
+      todaysAppointments.map((appointment) =>
+        appointment.id === id ? { ...appointment, viewed: true } : appointment
+      )
+    );
+
+    toast({
+      title: "Appointment Viewed",
+      description: "Appointment details have been viewed",
+    });
+  };
+
+  // Handle complete task
+  const handleCompleteTask = (id: number) => {
+    setPendingTasks(
+      pendingTasks.map((task) =>
+        task.id === id ? { ...task, completed: true } : task
+      )
+    );
+
+    toast({
+      title: "Task Completed",
+      description: "Task has been marked as complete",
+    });
+  };
+
+  // Handle view task
+  const handleViewTask = (id: number) => {
+    setPendingTasks(
+      pendingTasks.map((task) =>
+        task.id === id ? { ...task, viewed: true } : task
+      )
+    );
+
+    toast({
+      title: "Task Viewed",
+      description: "Task has been marked as viewed",
+    });
+  };
+
+  // Handle navigation to modality
+  const handleModalityClick = (path: string) => {
+    navigate(path);
+  };
 
   return (
     <DashboardLayout userRole={userRole}>
       <div className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <h1 className="text-3xl font-bold">Doctor Dashboard</h1>
-          <div className="flex items-center gap-4 mt-4 md:mt-0">
-            <div className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full flex items-center gap-2">
-              <Clock size={16} />
-              <span>On Duty</span>
-            </div>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">
-              Start Patient Session
-            </button>
-          </div>
         </div>
 
+        {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card>
             <CardHeader className="pb-2">
@@ -173,6 +277,33 @@ const DoctorPanel = () => {
           </Card>
         </div>
 
+        {/* Modalities Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Medical Imaging & Diagnostics</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {modalities.map((modality, index) => (
+                <div
+                  key={index}
+                  onClick={() => handleModalityClick(modality.path)}
+                  className="p-4 border rounded-lg hover:bg-blue-50 flex flex-col items-center gap-2 transition-colors cursor-pointer"
+                >
+                  <div className="p-3 bg-blue-100 rounded-full">
+                    <modality.icon size={24} className="text-blue-600" />
+                  </div>
+                  <span className="font-medium">{modality.name}</span>
+                  <p className="text-xs text-gray-500 text-center">
+                    {modality.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Today's Schedule */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Today's Schedule</CardTitle>
@@ -213,15 +344,24 @@ const DoctorPanel = () => {
                         </span>
                       </td>
                       <td className="py-3 space-x-2">
-                        <button className="text-sm text-blue-600 hover:text-blue-800">
-                          {appointment.status === "scheduled"
-                            ? "Start"
-                            : "View"}
-                        </button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 py-0 px-2 flex items-center gap-1"
+                          onClick={() => handleViewAppointment(appointment.id)}
+                        >
+                          <Eye size={15} />
+                          <span>View</span>
+                        </Button>
                         {appointment.status === "scheduled" && (
-                          <button className="text-sm text-gray-600 hover:text-gray-800">
-                            Reschedule
-                          </button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 py-0 px-2 flex items-center gap-1"
+                          >
+                            <Calendar size={15} />
+                            <span>Reschedule</span>
+                          </Button>
                         )}
                       </td>
                     </tr>
@@ -232,6 +372,7 @@ const DoctorPanel = () => {
           </CardContent>
         </Card>
 
+        {/* Tasks */}
         <Card>
           <CardHeader>
             <CardTitle>Pending Tasks</CardTitle>
@@ -254,13 +395,46 @@ const DoctorPanel = () => {
                       }`}
                     ></div>
                     <div>
-                      <p className="font-medium">{task.task}</p>
+                      <p className="font-medium">
+                        {task.task}
+                        {task.viewed && !task.completed && (
+                          <span className="ml-2 px-2 py-0.5 bg-blue-100 text-blue-600 text-xs rounded-full">
+                            Viewed
+                          </span>
+                        )}
+                        {task.completed && (
+                          <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-600 text-xs rounded-full">
+                            Completed
+                          </span>
+                        )}
+                      </p>
                       <p className="text-sm text-gray-500">Due: {task.due}</p>
                     </div>
                   </div>
-                  <button className="text-sm text-blue-600 hover:text-blue-800">
-                    Complete
-                  </button>
+                  <div className="flex gap-2">
+                    {!task.viewed && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleViewTask(task.id)}
+                        className="h-7 py-0 px-2 flex items-center gap-1"
+                      >
+                        <Eye size={15} />
+                        <span>View</span>
+                      </Button>
+                    )}
+                    {!task.completed && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleCompleteTask(task.id)}
+                        className="h-7 py-0 px-2 flex items-center gap-1"
+                      >
+                        <Check size={15} />
+                        <span>Complete</span>
+                      </Button>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

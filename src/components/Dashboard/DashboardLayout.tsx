@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Home,
@@ -10,6 +10,7 @@ import {
   User,
   Users,
   Receipt,
+  LayoutDashboard,
 } from "lucide-react";
 
 interface DashboardLayoutProps {
@@ -22,29 +23,46 @@ const DashboardLayout = ({
   userRole = "patient",
 }: DashboardLayoutProps) => {
   const location = useLocation();
+  const [staffRole, setStaffRole] = useState<"doctor" | "receptionist">(
+    "doctor"
+  );
+
+  useEffect(() => {
+    const storedStaffRole = localStorage.getItem("staffRole") as
+      | "doctor"
+      | "receptionist";
+    if (storedStaffRole) {
+      setStaffRole(storedStaffRole);
+    }
+  }, []);
 
   const getNavigation = () => {
-    const commonNav = [
-      { name: "Dashboard", href: "/dashboard", icon: Home },
-      { name: "Appointments", href: "/appointments", icon: Calendar },
-      { name: "Profile", href: "/profile", icon: UserRound },
-      { name: "Settings", href: "/settings", icon: Settings },
+    const dashboardItem = [
+      {
+        name: "Dashboard",
+        href:
+          userRole === "admin"
+            ? "/admin"
+            : userRole === "staff"
+            ? `/${staffRole}`
+            : "/dashboard",
+        icon: LayoutDashboard,
+      },
     ];
 
-    const additionalNav = {
-      admin: [
-        { name: "Staff Management", href: "/staff", icon: Users },
-        { name: "Patient Records", href: "/patients", icon: FileText },
-      ],
-      staff: [{ name: "Patient Records", href: "/patients", icon: FileText }],
-      patient: [
+    if (userRole === "patient") {
+      return [
+        ...dashboardItem,
+        { name: "Appointments", href: "/appointments", icon: Calendar },
         { name: "Medical Records", href: "/medical-records", icon: FileText },
         { name: "Prescriptions", href: "/prescriptions", icon: FileText },
         { name: "Billing", href: "/billing", icon: Receipt },
-      ],
-    };
-
-    return [...commonNav, ...(additionalNav[userRole] || [])];
+        { name: "Profile", href: "/profile", icon: UserRound },
+        { name: "Settings", href: "/settings", icon: Settings },
+      ];
+    } else {
+      return dashboardItem;
+    }
   };
 
   const navigation = getNavigation();
@@ -98,7 +116,9 @@ const DashboardLayout = ({
           <div className="mb-6 flex items-center justify-between">
             <div className="text-sm px-3 py-1 rounded-full bg-blue-100 text-blue-700 flex items-center">
               <User size={16} className="mr-1" />
-              <span className="capitalize">{userRole} Account</span>
+              <span className="capitalize">
+                {userRole === "staff" ? staffRole : userRole} Account
+              </span>
             </div>
           </div>
 

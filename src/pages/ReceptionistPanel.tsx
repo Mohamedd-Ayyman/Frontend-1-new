@@ -1,10 +1,20 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../components/Dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Clock, UserRound, Search, Users } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  UserRound,
+  Search,
+  Users,
+  Activity,
+  FileText,
+} from "lucide-react";
 
 const ReceptionistPanel = () => {
   const userRole = "staff";
+  const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -68,6 +78,37 @@ const ReceptionistPanel = () => {
     },
   ];
 
+  const modalities = [
+    {
+      name: "CT Scan",
+      status: "Available (2)",
+      path: "/modalities/ct-scan",
+      icon: Activity,
+    },
+    {
+      name: "MRI",
+      status: "1 Available",
+      path: "/modalities/mri-scan",
+      icon: Activity,
+    },
+    {
+      name: "Ultrasound",
+      status: "All Available",
+      path: "/modalities/ultrasound",
+      icon: Activity,
+    },
+    {
+      name: "X-Ray",
+      status: "Busy",
+      path: "/modalities/x-ray",
+      icon: Activity,
+    },
+  ];
+
+  const handleModalityClick = (path: string) => {
+    navigate(path);
+  };
+
   return (
     <DashboardLayout userRole={userRole}>
       <div className="space-y-6">
@@ -126,6 +167,35 @@ const ReceptionistPanel = () => {
             </CardContent>
           </Card>
         </div>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Imaging & Diagnostics Status</CardTitle>
+            <button className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1">
+              <Calendar size={16} />
+              Schedule Procedure
+            </button>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+              {modalities.map((modality, index) => (
+                <div
+                  key={index}
+                  onClick={() => handleModalityClick(modality.path)}
+                  className="p-4 border rounded-lg hover:bg-blue-50 flex flex-col items-center gap-2 transition-colors cursor-pointer"
+                >
+                  <div className="p-3 bg-blue-100 rounded-full">
+                    <modality.icon size={24} className="text-blue-600" />
+                  </div>
+                  <span className="font-medium">{modality.name}</span>
+                  <span className="text-xs px-2 py-1 bg-blue-50 text-blue-700 rounded-full">
+                    {modality.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
