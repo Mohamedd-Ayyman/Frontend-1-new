@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,7 +10,14 @@ import Dashboard from "./pages/Dashboard";
 import Appointments from "./pages/Appointments";
 import Profile from "./pages/Profile";
 import MedicalRecords from "./pages/MedicalRecords";
+import Billing from "./pages/Billing";
+import Settings from "./pages/Settings";
+import Prescriptions from "./pages/Prescriptions";
 import NotFound from "./pages/NotFound";
+import AdminPanel from "./pages/AdminPanel";
+import DoctorPanel from "./pages/DoctorPanel";
+import ReceptionistPanel from "./pages/ReceptionistPanel";
+import CTScan from "./pages/Modalities/CTScan";
 
 const queryClient = new QueryClient();
 
@@ -29,7 +35,16 @@ const App = () => (
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/medical-records" element={<MedicalRecords />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/billing" element={<Billing />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/prescriptions" element={<Prescriptions />} />
+
+          <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/doctor" element={<DoctorPanel />} />
+          <Route path="/receptionist" element={<ReceptionistPanel />} />
+
+          <Route path="/modalities/ct-scan" element={<CTScan />} />
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

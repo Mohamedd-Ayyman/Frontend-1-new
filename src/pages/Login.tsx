@@ -12,15 +12,20 @@ const Login = () => {
           <Link to="/" className="inline-block">
             <div className="flex items-center justify-center">
               <Stethoscope className="h-8 w-8 text-blue-600 mr-2" />
-              <h2 className="text-3xl font-bold text-blue-700">MediCare</h2>
+              <h2 className="text-3xl font-bold text-blue-700">
+                Radiology Department
+              </h2>
             </div>
           </Link>
         </div>
-        
+
         <LoginForm />
-        
+
         <div className="mt-8 text-center text-sm text-gray-600">
-          <p>© {new Date().getFullYear()} MediCare. All rights reserved.</p>
+          <p>
+            © {new Date().getFullYear()} Radiology Department. All rights
+            reserved.
+          </p>
         </div>
       </div>
     </div>
